@@ -7,10 +7,8 @@ import ch.heigvd.res.labio.interfaces.IFileExplorer;
 import ch.heigvd.res.labio.interfaces.IFileVisitor;
 import ch.heigvd.res.labio.quotes.QuoteClient;
 import ch.heigvd.res.labio.quotes.Quote;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
+import java.util.List; // STUDENT
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -90,6 +88,9 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      String filename = "quote-" + i + ".utf8";
+      storeQuote(quote, filename);
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -123,7 +124,35 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    // Accede a la liste des tags et cree des sous-dossiers en consequence
+    List<String> tags = quote.getTags();
+    // Construction du path pour les sous-dossiers
+    String path = WORKSPACE_DIRECTORY;
+    for (String tag : tags) {
+      path += "/";
+      path += tag;
+    }
+    path += "/";
+    path += filename;
+
+    File file = new File(path);
+    // Creation des dossiers parents (sans getParentFile(), le nom du fichier est cree comme un dossier
+    file.getParentFile().mkdirs();
+    // Creation du fichier
+    file.createNewFile();
+
+    // Extraction de la quote
+    String buf = quote.getQuote();
+    // Creation d'un FileWriter
+    Writer fw = new OutputStreamWriter(new FileOutputStream(path), "UTF-8");
+    // Ecriture de la quote dans le fichier
+    fw.write(buf);
+
+    // Procedure de fin
+    fw.flush();
+    fw.close();
   }
   
   /**
@@ -140,6 +169,13 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        // Ecrire le nom du fichier avec le chemin
+        String filename = file.getPath();
+        try {
+          writer.write(filename + "\n");
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       }
     });
   }
