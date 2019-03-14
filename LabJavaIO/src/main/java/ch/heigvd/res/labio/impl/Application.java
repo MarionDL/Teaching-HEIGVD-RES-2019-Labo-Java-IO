@@ -8,7 +8,7 @@ import ch.heigvd.res.labio.interfaces.IFileVisitor;
 import ch.heigvd.res.labio.quotes.QuoteClient;
 import ch.heigvd.res.labio.quotes.Quote;
 import java.io.*;
-import java.util.List; // STUDENT
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -124,10 +124,10 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    // throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
-    // Accede a la liste des tags et cree des sous-dossiers en consequence
+    // Accede a la liste des tags
     List<String> tags = quote.getTags();
+
     // Construction du path pour les sous-dossiers
     String path = WORKSPACE_DIRECTORY;
     for (String tag : tags) {
@@ -138,7 +138,8 @@ public class Application implements IApplication {
     path += filename;
 
     File file = new File(path);
-    // Creation des dossiers parents (sans getParentFile(), le nom du fichier est cree comme un dossier
+
+    // Creation des dossiers parents (sans getParentFile(), le nom du fichier est cree comme un dossier)
     file.getParentFile().mkdirs();
     // Creation du fichier
     file.createNewFile();
@@ -169,7 +170,7 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
-        // Ecrire le nom du fichier avec le chemin
+        // Extraction du chemin d'acces du fichier
         String filename = file.getPath();
         try {
           writer.write(filename + "\n");

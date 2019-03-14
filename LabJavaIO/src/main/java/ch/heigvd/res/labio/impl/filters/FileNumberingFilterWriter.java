@@ -24,20 +24,19 @@ public class FileNumberingFilterWriter extends FilterWriter {
   // Detection d'un '\r'
   private boolean detectR = false;
 
-
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    // Appel de la methode definie au-dessous
     this.write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    // throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
     for (int i = off; i < len + off; ++i) {
       // Appel de la methode definie au-dessous
@@ -47,18 +46,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    // throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
+    // Cas particulier : premiere ligne
     if (lineNb == 1) {
       this.out.write("1\t");
       ++lineNb;
     }
 
-    // Ecrit aussi le \n
+    // Si un \r n'a pas ete detecte, on ecrit le char correctement (y compris le \n)
     if (!detectR) {
       this.out.write(c);
-    }
-    else {
+    } else {
       if (c != '\n') {
         this.out.write(lineNb++ + "\t" + (char) c);
         detectR = false;
@@ -77,6 +75,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
       case '\r':
         detectR = true;
         break;
+      default:
     }
   }
 }
